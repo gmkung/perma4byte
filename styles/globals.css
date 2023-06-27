@@ -1,0 +1,22 @@
+body {
+  background-color: #000; /* Black */
+  color: #0f0; /* Bright Green */
+  font-family: "Courier New", Courier, monospace; /* Monospace fonts for sci-fi look */
+  padding: 0;
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #0f0; /* Bright Green */
+}
+
+input,
+button {
+  color: #000; /* Black */
+  background-color: #0f0; /* Bright Green */
+}
