@@ -23,8 +23,13 @@ const Index = () => {
 
   const handleSearch = async () => {
     const contract = await getContract();
+    console.log("Contract:", contract);
     try {
-      const data = await contract.readState();
+      const data = await contract
+        .setEvaluationOptions({
+          remoteStateSyncEnabled: true,
+        })
+        .readState();
       const posts = data.cachedValue.state.functions;
       setLookupResult(posts[searchTerm]);
     } catch (err) {
@@ -51,7 +56,9 @@ const Index = () => {
 
         {lookupResult && <TableComponent data={lookupResult} />}
 
-        <button onClick={handleOpenOverlay}>Submit new function signature</button>
+        <button onClick={handleOpenOverlay}>
+          Submit new function signature
+        </button>
 
         {showOverlay && (
           <div className="overlay">
@@ -74,7 +81,7 @@ const Index = () => {
         header {
           text-align: center;
           background-color: #000000;
-          color: #00FF00;
+          color: #00ff00;
           padding: 20px;
         }
 
@@ -109,15 +116,15 @@ const Index = () => {
           font-size: 1em;
           border-radius: 4px;
           border: none;
-          background: #39453C;
-          color: #00FF00;
+          background: #39453c;
+          color: #00ff00;
         }
 
         footer {
           text-align: center;
           padding: 20px;
           background: #000000;
-          color: #00FF00;
+          color: #00ff00;
         }
       `}</style>
     </div>
