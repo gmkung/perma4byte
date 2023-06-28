@@ -1,3 +1,4 @@
+//Next.js index.js page
 import { useState } from "react";
 import { getContract } from "../configureWarpClient.js";
 import OverlayForm from "../components/submitModal.js";
@@ -6,9 +7,6 @@ import TableComponent from "../components/displayModal.js";
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [lookupResult, setLookupResult] = useState(null);
-  //var lookupResult={asd:"312"};
-  const [functionDetails, setFunctionDetails] = useState(null);
-  //for the overlay
   const [showOverlay, setShowOverlay] = useState(false);
 
   const handleOpenOverlay = () => {
@@ -24,17 +22,10 @@ const Index = () => {
   };
 
   const handleSearch = async () => {
-    // This is where you'll call your search function to retrieve function details.
-    // Set your data to functionDetails state.
-    // setFunctionDetails(response);
     const contract = await getContract();
-    console.log(contract); //0x680df015
     try {
       const data = await contract.readState();
-      console.log("raw data:", data);
       const posts = data.cachedValue.state.functions;
-      //this.lookupResult = posts[searchTerm];
-      console.log("retrieved result: ", posts[searchTerm]);
       setLookupResult(posts[searchTerm]);
     } catch (err) {
       console.log("error: ", err);
@@ -42,32 +33,25 @@ const Index = () => {
   };
 
   return (
-    <div>
+    <div className="page-container">
       <header>
-        <h1>Ethereum Function Explorer</h1>
+        <h1>Perma4byte</h1>
+        <p>The decentralized Ethereum function lookup service</p>
       </header>
       <main>
-        <div className="search-container">
+        <div className="search-bar">
           <input
             type="text"
             value={searchTerm}
             onChange={handleSearchChange}
-            placeholder="Search function signatures..."
+            placeholder="Enter function hash..."
           />
           <button onClick={handleSearch}>Search</button>
         </div>
 
-        <div className="results">
-          {lookupResult && Object.keys(lookupResult).length > 0 && (
-            <div className="table-container">
-              <TableComponent data={lookupResult} />
-            </div>
-          )}
-        </div>
-        <br />
-        <button onClick={handleOpenOverlay}>
-          Submit new function signature
-        </button>
+        {lookupResult && <TableComponent data={lookupResult} />}
+
+        <button onClick={handleOpenOverlay}>Submit new function signature</button>
 
         {showOverlay && (
           <div className="overlay">
@@ -80,12 +64,28 @@ const Index = () => {
       </footer>
 
       <style jsx>{`
+        .page-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-height: 100vh;
+        }
+
         header {
           text-align: center;
-          color: #00ff00; // Sci-fi green
-          font-family: "Courier New", Courier, monospace; // Monospace fonts for sci-fi look
-          background-color: #000; // Black background
-          padding: 20px 0;
+          background-color: #000000;
+          color: #00FF00;
+          padding: 20px;
+        }
+
+        header h1 {
+          margin: 0;
+          font-size: 2.5em;
+        }
+
+        header p {
+          margin: 0;
+          font-size: 1.5em;
         }
 
         main {
@@ -93,70 +93,31 @@ const Index = () => {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          min-height: calc(100vh - 120px);
-          background-color: #000;
-          color: #00ff00;
-          font-family: "Courier New", Courier, monospace;
-          padding: 50px 0;
+          flex-grow: 1;
         }
 
-        .search-container {
+        .search-bar {
           display: flex;
-          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 2em;
         }
 
-        .search-container input,
-        .search-container button {
-          margin: 5px;
-        }
-
-        .results {
-          width: 100%;
-          display: flex;
-          justify-content: center;
-          margin-top: 20px;
-        }
-
-        .table-container {
-          background-color: #111; // Lighter than black
-          border-radius: 10px; // Rounded edges
-          padding: 20px;
-          color: white;
-          width: 80%; // Set a width
-          transition: all 0.3s ease-in-out; // Sliding effect
-        }
-
-        .overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5); // Semi-transparent black
-          display: flex;
-          justify-content: center;
-          align-items: center;
+        .search-bar input {
+          flex-grow: 1;
+          margin-right: 1em;
+          padding: 10px;
+          font-size: 1em;
+          border-radius: 4px;
+          border: none;
+          background: #39453C;
+          color: #00FF00;
         }
 
         footer {
           text-align: center;
-          color: #00ff00; // Sci-fi green
-          font-family: "Courier New", Courier, monospace; // Monospace fonts for sci-fi look
-          background-color: #000; // Black background
-          padding: 20px 0;
-        }
-
-        input,
-        button {
-          color: #000; // Black
-          background-color: #0f0; // Bright Green
-          border: none;
-          padding: 10px 20px;
-          font-size: 16px;
-        }
-
-        button {
-          cursor: pointer;
+          padding: 20px;
+          background: #000000;
+          color: #00FF00;
         }
       `}</style>
     </div>

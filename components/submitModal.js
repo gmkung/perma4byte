@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { getContract } from "../configureWarpClient.js";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OverlayForm = ({ onClose }) => {
   const [textValue, setTextValue] = useState("");
@@ -18,6 +20,7 @@ const OverlayForm = ({ onClose }) => {
       onClose(); // Close the overlay form
     } catch (err) {
       console.log("error:", err);
+      toast.error('An error: "' + err + '". \n Please remember to connect with an Arweave wallet and try again.'); // Display error toast
     }
   };
 
@@ -42,7 +45,6 @@ const OverlayForm = ({ onClose }) => {
           </div>
         </form>
       </div>
-
       <style jsx>{`
         .overlay {
           position: fixed;
@@ -57,7 +59,7 @@ const OverlayForm = ({ onClose }) => {
         }
 
         .modal {
-          background-color: #5A5A5A; // Greyed-out background
+          background-color: #5a5a5a; // Greyed-out background
           padding: 20px;
           border-radius: 10px;
           max-width: 500px;
@@ -95,6 +97,7 @@ const OverlayForm = ({ onClose }) => {
           margin-top: 10px;
         }
       `}</style>
+      <ToastContainer />
     </div>
   );
 };
