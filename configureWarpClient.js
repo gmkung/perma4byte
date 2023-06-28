@@ -1,7 +1,7 @@
 import { WarpFactory } from "warp-contracts";
 import { transactionId } from "./transactionid.js";
 import wallet from "./testwallet.json";
-
+import { EthersExtension } from 'warp-contracts-plugin-ethers'
 /*
  *  environment can be 'local' | 'testnet' | 'mainnet' | 'custom';
  */
@@ -14,10 +14,10 @@ let contract;
 console.log("TransactionId", transactionId);
 async function getContract() {
   if (environment == "testnet") {
-    warp = WarpFactory.forTestnet();
+    warp = WarpFactory.forTestnet().use(new EthersExtension());
     contract = warp.contract(transactionId).connect(wallet);
   } else if (environment === "mainnet") {
-    warp = WarpFactory.forMainnet();
+    warp = WarpFactory.forMainnet().use(new EthersExtension());
     contract = warp.contract(transactionId).connect("use_wallet");
     console.log("Mainnet wallet configured: ", contract);
   } else {
