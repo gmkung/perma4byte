@@ -31,6 +31,7 @@ const Index = () => {
     console.log(contract); //0x680df015
     try {
       const data = await contract.readState();
+      console.log("raw data:", data);
       const posts = data.cachedValue.state.functions;
       //this.lookupResult = posts[searchTerm];
       console.log("retrieved result: ", posts[searchTerm]);
