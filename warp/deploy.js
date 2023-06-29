@@ -14,7 +14,7 @@ async function deploy() {
   })
   fs.writeFileSync(
     '../transactionid.js',
-    `export const transactionid = "${contractTxId}"`,
+    `export const transactionId = "${contractTxId}"`,
   )
 
   const contract = warp.contract(contractTxId).connect(wallet)

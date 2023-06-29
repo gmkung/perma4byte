@@ -1,5 +1,5 @@
 //Next.js index.js page
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getContract } from "../configureWarpClient.js";
 import OverlayForm from "../components/submitModal.js";
 import TableComponent from "../components/displayModal.js";
@@ -8,6 +8,29 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [lookupResult, setLookupResult] = useState(null);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [functionCount, setFunctionCount] = useState(0);
+  const [hashCount, setHashCount] = useState(0);
+
+  // Moved data fetch to useEffect
+  useEffect(() => {
+    const fetchData = async () => {
+      const contract = await getContract();
+
+      try {
+        const data = await contract
+          .setEvaluationOptions({
+            remoteStateSyncEnabled: true,
+          })
+          .readState();
+        setFunctionCount(data.cachedValue.state.functionCount);
+        setHashCount(data.cachedValue.state.functionHashCount);
+      } catch (err) {
+        console.log("error: ", err);
+      }
+    };
+
+    fetchData();
+  }, [showOverlay]); // This empty array causes this effect to run once on component mount
 
   const handleOpenOverlay = () => {
     setShowOverlay(true);
@@ -32,7 +55,7 @@ const Index = () => {
         .readState();
       console.log("data:", data);
       const posts = data.cachedValue.state.functions;
-      setLookupResult(posts[searchTerm]);
+      setLookupResult(posts[searchTerm.trim()]);
     } catch (err) {
       console.log("error: ", err);
     }
@@ -44,6 +67,9 @@ const Index = () => {
         <h1>Perma4byte</h1>
         <p>The decentralized Ethereum function lookup service</p>
       </header>
+      <p className="info">
+        Total functions: {functionCount} | Total hashes: {hashCount}
+      </p>
       <main>
         <div className="search-bar">
           <input
@@ -55,7 +81,10 @@ const Index = () => {
           <button onClick={handleSearch}>Search</button>
         </div>
 
-        {lookupResult && <TableComponent data={lookupResult} />}
+        {lookupResult &&
+          lookupResult.map((data, index) => (
+            <TableComponent key={index} data={data} />
+          ))}
 
         <button onClick={handleOpenOverlay}>
           Submit new function signature
@@ -126,6 +155,12 @@ const Index = () => {
           padding: 20px;
           background: #000000;
           color: #00ff00;
+        }
+
+        .info {
+          font-size: 0.8em;
+          text-align: center;
+          margin: 0;
         }
       `}</style>
     </div>

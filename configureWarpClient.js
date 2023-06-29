@@ -1,7 +1,7 @@
 import { WarpFactory } from "warp-contracts";
 import { transactionId } from "./transactionid.js";
 import wallet from "./testwallet.json";
-import { EthersExtension } from 'warp-contracts-plugin-ethers'
+import { EthersExtension } from "warp-contracts-plugin-ethers";
 /*
  *  environment can be 'local' | 'testnet' | 'mainnet' | 'custom';
  */

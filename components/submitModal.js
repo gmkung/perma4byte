@@ -13,8 +13,8 @@ const OverlayForm = ({ onClose }) => {
     const contract = await getContract();
     try {
       const result = await contract.writeInteraction({
-        function: "registerFunction",
-        functionString: textValue,
+        function: "registerFunctions",
+        functionStrings: [textValue],
       });
       console.log("result:", result);
       onClose(); // Close the overlay form
