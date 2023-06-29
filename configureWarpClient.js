@@ -17,7 +17,7 @@ async function getContract() {
     warp = WarpFactory.forTestnet().use(new EthersExtension());
     contract = warp.contract(transactionId).connect(wallet);
   } else if (environment === "mainnet") {
-    warp = WarpFactory.forMainnet();//.use(new EthersExtension());
+    warp = WarpFactory.forMainnet().use(new EthersExtension());
     contract = warp.contract(transactionId).connect("use_wallet");
     console.log("Mainnet wallet configured: ", contract);
   } else {

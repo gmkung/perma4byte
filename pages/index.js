@@ -26,9 +26,9 @@ const Index = () => {
     console.log("Contract:", contract);
     try {
       const data = await contract
-        //.setEvaluationOptions({
-        //remoteStateSyncEnabled: true,
-        //})
+        .setEvaluationOptions({
+          remoteStateSyncEnabled: true,
+        })
         .readState();
       console.log("data:", data);
       const posts = data.cachedValue.state.functions;
