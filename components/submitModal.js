@@ -2,15 +2,19 @@ import { useState } from "react";
 import { getContract } from "../configureWarpClient.js";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingSpinner from "./loadingSpinner.js";
 
 const OverlayForm = ({ onClose }) => {
   const [textValue, setTextValue] = useState("");
+  const [loading, setLoadingValue] = useState(false);
 
   const handleSignatureSubmit = async (event) => {
     event.preventDefault();
     if (!textValue) return;
 
+    setLoadingValue(true);
     const contract = await getContract();
+
     try {
       const result = await contract.writeInteraction({
         function: "registerFunctions",
@@ -20,8 +24,13 @@ const OverlayForm = ({ onClose }) => {
       onClose(); // Close the overlay form
     } catch (err) {
       console.log("error:", err);
-      toast.error('An error: "' + err + '". \n Please remember to connect with an Arweave wallet and try again.'); // Display error toast
+      toast.error(
+        'An error: "' +
+          err +
+          '". \n Please remember to connect with an Arweave wallet and try again.'
+      ); // Display error toast
     }
+    setLoadingValue(false);
   };
 
   return (
@@ -40,8 +49,13 @@ const OverlayForm = ({ onClose }) => {
               placeholder="Enter text"
             />
           </div>
+
           <div className="button-container">
-            <button type="submit">Submit</button>
+            {loading ? (
+              <LoadingSpinner />
+            ) : (
+              <button type="submit">Submit</button>
+            )}
           </div>
         </form>
       </div>

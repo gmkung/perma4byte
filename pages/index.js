@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import { getContract } from "../configureWarpClient.js";
 import OverlayForm from "../components/submitModal.js";
 import TableComponent from "../components/displayModal.js";
+import LoadingSpinner from "../components/loadingSpinner.js";
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [lookupResult, setLookupResult] = useState(null);
+  const [lookupResult, setLookupResult] = useState([]);
   const [showOverlay, setShowOverlay] = useState(false);
-  const [functionCount, setFunctionCount] = useState(0);
-  const [hashCount, setHashCount] = useState(0);
+  const [functionCount, setFunctionCount] = useState(null);
+  const [hashCount, setHashCount] = useState(null);
 
   // Moved data fetch to useEffect
   useEffect(() => {
@@ -47,6 +48,7 @@ const Index = () => {
   const handleSearch = async () => {
     const contract = await getContract();
     console.log("Contract:", contract);
+    setLookupResult(null);
     try {
       const data = await contract
         .setEvaluationOptions({
@@ -55,7 +57,8 @@ const Index = () => {
         .readState();
       console.log("data:", data);
       const posts = data.cachedValue.state.functions;
-      setLookupResult(posts[searchTerm.trim()]);
+      console.log("posts[searchTerm.trim()]:", posts[searchTerm.trim()]);
+      setLookupResult(posts[searchTerm.trim()] || []);
     } catch (err) {
       console.log("error: ", err);
     }
@@ -68,8 +71,11 @@ const Index = () => {
         <p>The decentralized Ethereum function lookup service</p>
       </header>
       <p className="info">
-        Total functions: {functionCount} | Total hashes: {hashCount}
+        Total functions:{" "}
+        {functionCount !== null ? functionCount : <LoadingSpinner />} | Total
+        hashes: {hashCount !== null ? hashCount : <LoadingSpinner />}
       </p>
+
       <main>
         <div className="search-bar">
           <input
@@ -81,10 +87,15 @@ const Index = () => {
           <button onClick={handleSearch}>Search</button>
         </div>
 
-        {lookupResult &&
+        {lookupResult ? (
           lookupResult.map((data, index) => (
             <TableComponent key={index} data={data} />
-          ))}
+          ))
+        ) : (
+          <span style={{ paddingBottom: "20px" }}>
+            <LoadingSpinner />
+          </span>
+        )}
 
         <button onClick={handleOpenOverlay}>
           Submit new function signature
@@ -97,7 +108,7 @@ const Index = () => {
         )}
       </main>
       <footer>
-        <p>© 2023 Perma4byte</p>
+        <p>Copyright 2023 © Perma4byte</p>
       </footer>
 
       <style jsx>{`

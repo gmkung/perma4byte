@@ -6,6 +6,8 @@
     "lint": "next lint"
   },
   "type": "module",
+  "author": "Guangmian Kung",
+  "license": "MIT",
   "devDependencies": {
     "@types/react": "18.2.11"
   },
